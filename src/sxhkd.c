@@ -23,6 +23,7 @@
  */
 
 #include <xcb/xcb_event.h>
+#include <xcb/xkb.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -283,6 +284,8 @@ void setup(void)
 	dpy = xcb_connect(NULL, &screen_idx);
 	if (xcb_connection_has_error(dpy))
 		err("Can't open display.\n");
+	xcb_xkb_use_extension(dpy, XCB_XKB_MAJOR_VERSION, XCB_XKB_MINOR_VERSION);
+	xcb_xkb_per_client_flags(dpy, XCB_XKB_ID_USE_CORE_KBD, XCB_XKB_PER_CLIENT_FLAG_DETECTABLE_AUTO_REPEAT, 1, 0, 0, 0);
 	xcb_screen_t *screen = NULL;
 	xcb_screen_iterator_t screen_iter = xcb_setup_roots_iterator(xcb_get_setup(dpy));
 	for (; screen_iter.rem; xcb_screen_next(&screen_iter), screen_idx--) {
